@@ -47,7 +47,7 @@ with st.sidebar:
             penalty = st.selectbox('Penalización', 
                                    options=['l2', 'l1', 'elasticnet', None])
 
-            c = st.number_input('C', min_value=0.1, max_value=2.0)
+            c = st.number_input('C', min_value=0.1, max_value=2.0, value=1.0)
             solver = st.selectbox('Solver',
                                   options=get_possible_solvers(penalty))
 
