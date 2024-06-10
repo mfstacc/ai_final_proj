@@ -2,4 +2,11 @@ Include
 Lib
 Scripts
 share
+bin
+etc
+lib
+include
+lib64
+*.md
+*.pkl
 pyvenv.cfg
