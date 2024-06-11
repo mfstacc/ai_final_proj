@@ -63,18 +63,16 @@ if show_table:
 if show_distrib:
     fig, ax = plt.subplots()
     df.hist(ax=ax)
-    plt.tight_layout()
     st.pyplot(fig)
 
 if show_boxplot:
     box_fig, box_ax = plt.subplots()
-    df.boxplot(ax=box_ax)
     plt.tight_layout()
+    df.boxplot(ax=box_ax)
     st.pyplot(box_fig)
 
 if show_corrmap:
     hm_fig, hm_ax = plt.subplots()
     hm_ax.grid(False)
     heatmap(data=df.corr(), annot=True, fmt='.2f', ax=hm_ax)
-    plt.tight_layout()
     st.pyplot(hm_fig)

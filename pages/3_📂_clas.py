@@ -71,12 +71,12 @@ with st.sidebar:
             activation_fn = st.selectbox('Función de activación',
                                          options=['identity', 'logistic', 'tanh', 'relu'])
             solver = st.selectbox('Solver',
-                                  options=['lbfgs', 'sgd', 'adam'])
+                                  options=['adam', 'lbfgs', 'sgd'])
             solver = 'adam'
             learning_rate = st.slider('Tasa de aprendizaje',
                                       min_value=0.001, max_value=1.000, value=0.05)
             epochs = st.slider('Número de épocas',
-                               min_value=5, max_value=300, value=100)
+                               min_value=5, max_value=500, value=100)
             
             model = models[selected_model](hidden_layer_sizes=(hidden_layers,),
                                            activation=activation_fn,
@@ -89,7 +89,7 @@ with st.sidebar:
         X = df.loc[:, df.columns != 'Outcome']
         y = df['Outcome']
 
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
 
         model.fit(X_train, y_train)
         y_pred = model.predict(X_test)
@@ -107,18 +107,21 @@ if classify:
 
     st.markdown('## Curva ROC')
     fig, ax = subplots()
+    ax.set_xlabel('False Positive Rate')
+    ax.set_ylabel('True Positive Rate')
     ax.plot(fpr, tpr)
     st.pyplot(fig)
 
-
     st.markdown('## Curva Precision-Recall')
     fig_prc, ax_prc = subplots()
-    ax_prc.plot(precision, recall)
+    ax_prc.set_xlabel('Recall')
+    ax_prc.set_ylabel('Precision')
+    ax_prc.plot(recall, precision)
     st.pyplot(fig_prc)
 
-    accuracy = accuracy_score(y_pred, y_test)
-    f1 = f1_score(y_pred, y_test)
-    auc = roc_auc_score(y_pred, y_score) 
+    accuracy = accuracy_score(y_test, y_pred)
+    f1 = f1_score(y_test, y_pred)
+    auc = roc_auc_score(y_test, y_score) 
 
     acc, f1_s, auc_s= st.columns(3)
 
