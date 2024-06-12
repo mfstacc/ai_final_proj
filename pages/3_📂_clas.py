@@ -1,7 +1,7 @@
 import streamlit as st
 
 from sklearn.linear_model import LogisticRegression
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import confusion_matrix, precision_recall_curve, roc_curve, accuracy_score, f1_score, roc_auc_score
 from sklearn.model_selection import train_test_split
@@ -66,7 +66,7 @@ with st.sidebar:
                                            max_depth=max_depth)
         case 'Perceptrón Multicapa':
             hidden_layers = st.number_input('Número de capas ocultas',
-                                            min_value=0, max_value=100,
+                                            min_value=0, max_value=200,
                                             value=50)
             activation_fn = st.selectbox('Función de activación',
                                          options=['identity', 'logistic', 'tanh', 'relu'])
@@ -118,6 +118,12 @@ if classify:
     ax_prc.set_ylabel('Precision')
     ax_prc.plot(recall, precision)
     st.pyplot(fig_prc)
+
+    if selected_model == 'Árbol de Clasificación':
+        tree_fig, tree_ax = subplots()
+        plot_tree(model, filled=True, ax=tree_ax)
+        st.markdown('## Representación del árbol')
+        st.pyplot(tree_fig) 
 
     accuracy = accuracy_score(y_test, y_pred)
     f1 = f1_score(y_test, y_pred)

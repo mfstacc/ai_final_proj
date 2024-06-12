@@ -6,7 +6,8 @@ from sklearn.linear_model import LinearRegression, LassoCV, RidgeCV
 from sklearn.model_selection import train_test_split
 
 from seaborn import regplot
-import matplotlib.pyplot as plt
+import plotly.express as px
+import plotly.graph_objects as go
 
 st.set_page_config(page_title='Regresión Lineal', page_icon='📈')
 st.title('Regresión Lineal')
@@ -51,9 +52,6 @@ with st.sidebar:
 if three_dim_regression:
     st.markdown('## Hiperplano de regresión')
 
-    fig = plt.figure()
-    ax = fig.add_subplot(projection='3d')
-
     x_1_coef = model.coef_[0]
     x_2_coef = model.coef_[1]
     intercept = model.intercept_
@@ -62,13 +60,16 @@ if three_dim_regression:
     ys = df.loc[:, y_var]
     zs = df.loc[:, z_var]
 
-    ax.scatter(xs, ys, zs)
-    ax.set_xlabel(x_var)
-    ax.set_ylabel(y_var)
-    ax.set_zlabel(z_var)
+    x_range = np.arange(xs.min(), xs.max(), 0.2)
+    y_range = np.arange(ys.min(), ys.max(), 0.2)
+    xx, yy = np.meshgrid(x_range, y_range)
 
-    plt.tight_layout()
-    st.pyplot(fig)
+    pred = model.predict(np.c_[xx.ravel(), yy.ravel()])
+    pred = pred.reshape(xx.shape)
+    fig = px.scatter_3d(xs, ys, zs)
+    fig.add_traces(go.Surface())
+
+    st.plotly_chart(fig)
 
     st.latex(r'y=' + f'{x_1_coef:.3f}' + r'x_1' + ('+' if x_2_coef > 0 else '-') + f'{abs(x_2_coef):.3f}' + r'x_2' + ('+' if intercept > 0 else '-') + f'{abs(intercept):.2f}')
 else:
